@@ -13,7 +13,7 @@ export default class App {
     });
 
     this.expressApp.post('/deploy/:project', function (req, res) {
-      shell.exec(`cd /home/pi/Desktop/progetti/${req.params.project} && git pull && npm run tsc && pm2 restart 0`)
+      shell.exec(`cd ${process.env.PROJECSTPATH}${req.params.project} && git pull && npm run tsc && pm2 restart 0`)
       res.status(200).json({ msg: 'ok' });
     });
   }
