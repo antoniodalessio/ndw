@@ -12,8 +12,8 @@ export default class App {
       console.log('Server running on port 3010!');
     });
 
-    this.expressApp.get('/deploy/:project', function (req, res) {
-      shell.exec(`cd ../${req.params.name} && git pull && npm run tsc && pm2 restart 0`)
+    this.expressApp.post('/deploy/:project', function (req, res) {
+      shell.exec(`cd /home/pi/Desktop/progetti/${req.params.project} && git pull && npm run tsc && pm2 restart 0`)
       res.status(200).json({ msg: 'ok' });
     });
   }
