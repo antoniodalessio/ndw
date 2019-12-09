@@ -1,0 +1,36 @@
+{
+  "name": "ndw",
+  "version": "0.0.1",
+  "description": "Nodejs Deploy Webhook",
+  "main": "src/index.ts",
+  "scripts": {
+    "test": "jest --testTimeout=10000",
+    "start": "npm run tsc && node dist/index.js",
+    "build": "tsc",
+    "tsc": "tsc"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/antoniodalessio/ndw.git"
+  },
+  "keywords": [
+    "nodejs",
+    "deploy",
+    "webhook"
+  ],
+  "author": "Antonio D'Alessio",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/antoniodalessio/ndw/issues"
+  },
+  "homepage": "https://github.com/antoniodalessio/ndw#readme",
+  "dependencies": {
+    "@types/jasmine": "^3.5.0",
+    "@types/node": "^12.12.15",
+    "dotenv": "^8.2.0",
+    "express": "^4.17.1",
+    "reflect-metadata": "^0.1.13",
+    "shelljs": "^0.8.3",
+    "typescript": "^3.7.3"
+  }
+}
