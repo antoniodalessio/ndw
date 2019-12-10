@@ -5,20 +5,28 @@ const MongoClient = require('mongodb').MongoClient;
 export default class App {
 
   _expressApp
+  _db
 
   constructor(config) {
     this.expressApp = express();
+
+    this.initMongoDB()
 
     this.expressApp.listen(3010, function () {
       console.log('Server running on port 3010!');
     });
 
-    this.expressApp.post('/deploy/:project', function (req, res) {
+    this.expressApp.post('/deploy/:project', (req, res) => {
       shell.exec(`cd ${process.env.PROJECSTPATH}${req.params.project} && git pull && npm run tsc && pm2 restart 0`)
+      this.store(req.params.project);
       res.status(200).json({ msg: 'ok' });
     });
+  }
 
-    this.initMongoDB()
+
+  store(projectName: string) {
+    const collection = this.db.collection('deployments');
+    collection.insertOne({projectName : projectName, date: new Date()})
   }
 
 
@@ -29,19 +37,13 @@ export default class App {
 
     const dbName = 'ndw';
 
-    MongoClient.connect(url, function(err, client) {
+    MongoClient.connect(url, (err, client) => {
       
       console.log("Connected successfully to server");
 
-      const db = client.db(dbName);
-
-      const collection = db.collection('deployments');
-
-      collection.insertMany([
-        {a : 1}, {a : 2}, {a : 3}
-      ])
+      this.db = client.db(dbName);
      
-      client.close();
+      //client.close();
     });
   }
 
@@ -52,6 +54,14 @@ export default class App {
 
   public get expressApp() {
     return this._expressApp
+  }
+
+  public set db(val) {
+    this._db = val
+  }
+
+  public get db() {
+    return this._db
   }
 
 }
