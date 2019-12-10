@@ -84,7 +84,7 @@ export default class App {
 
     MongoClient.connect(url, (err, client) => {
       
-      console.log("Connected successfully to server");
+      console.log("Mongodb: connected successfully to server");
 
       this.db = client.db(dbName);
      
