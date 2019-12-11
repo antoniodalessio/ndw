@@ -10,16 +10,15 @@ export default class App {
   _transport
 
   constructor(config) {
-    this.initMongoDB()
+    //this.initMongoDB()
     this.initMailer()
     this.initServer()      
   }
 
-
   deploy(req, res) {
     try {
       if (shell.exec(`cd ${process.env.PROJECSTPATH}${req.params.project} && git pull && npm run tsc && pm2 restart 0`).code != 0) {
-        this.store(req.params.project);
+        //this.store(req.params.project);
         res.status(200).json({ msg: 'ok' });
         this.sendEmail(`${req.params.project} deploy success`, `${req.params.project} deploy success`)
       }else{
@@ -29,7 +28,6 @@ export default class App {
       this.sendEmail(`${req.params.project} deploy failed`, e)
     }
   }
-
 
   store(projectName: string) {
     const collection = this.db.collection('deployments');
