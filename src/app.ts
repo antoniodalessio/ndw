@@ -17,13 +17,16 @@ export default class App {
 
   deploy(req, res) {
     try {
-      if (shell.exec(`cd ${process.env.PROJECSTPATH}${req.params.project} && git pull && npm run tsc && pm2 restart 0`).code != 0) {
+      shell.exec(`cd ${process.env.PROJECSTPATH}${req.params.project} && git pull && npm run tsc && pm2 restart 0`)
+      res.status(200).json({ msg: 'ok' });
+      this.sendEmail(`${req.params.project} deploy success`, `${req.params.project} deploy success`)
+      /*if (.code != 0) {
         //this.store(req.params.project);
         res.status(200).json({ msg: 'ok' });
         this.sendEmail(`${req.params.project} deploy success`, `${req.params.project} deploy success`)
       }else{
         this.sendEmail(`${req.params.project} deploy failed`, "")
-      }
+      }*/
     } catch (e) {
       this.sendEmail(`${req.params.project} deploy failed`, JSON.stringify(e))
     }
