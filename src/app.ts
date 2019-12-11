@@ -60,7 +60,7 @@ export default class App {
       console.log('Server running on port 3010!');
     });
 
-    this.expressApp.post('/deploy/:project', () => this.deploy)
+    this.expressApp.post('/deploy/:project', (req, res) => this.deploy(req, res))
   }
 
   initMailer() {
