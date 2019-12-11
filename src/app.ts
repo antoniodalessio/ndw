@@ -25,7 +25,7 @@ export default class App {
         this.sendEmail(`${req.params.project} deploy failed`, "")
       }
     } catch (e) {
-      this.sendEmail(`${req.params.project} deploy failed`, e)
+      this.sendEmail(`${req.params.project} deploy failed`, JSON.stringify(e))
     }
   }
 
