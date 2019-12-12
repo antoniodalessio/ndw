@@ -41,7 +41,10 @@ export default class App {
         let prevresult:any = await previousPromise;
         let cmd = next.cmd + ' ' + next.args
         let commandExists = await shell.which(next.cmd)
-        if (prevresult.code == 0 && commandExists) {
+	console.log("cmd", cmd)
+        console.log("commandExists", commandExists)
+        console.log("prevresult.code", prevresult.code)       
+ if (prevresult.code == 0 && commandExists) {
           return shell.exec(cmd)
         }else{
           return Promise.resolve({code: 1})
