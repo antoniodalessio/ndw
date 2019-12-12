@@ -17,6 +17,16 @@ export default class App {
 
   async deploy(req, res) {
     try {
+      let res = await shell.exec(`cd ${process.env.PROJECSTPATH}${req.params.project} && git pull && npm run tsc && pm2 restart 0`)
+      console.log('res', res)
+      this.sendEmail(`${req.params.project} deploy success`, `${req.params.project} deploy success`)
+    }catch(e) {
+      this.sendEmail(`${req.params.project} deploy failed`, JSON.stringify(e))
+    }
+  }
+
+  /*async deploy(req, res) {
+    try {
 
       let commands = [
         {
@@ -40,7 +50,8 @@ export default class App {
       let result = await commands.reduce( async (previousPromise, next) => {
         let prevresult:any = await previousPromise;
         let cmd = next.cmd + ' ' + next.args
-        let commandExists = await shell.which(next.cmd)
+        await shell.exec('pwd')
+        //let commandExists = await shell.which(next.cmd)
 	      console.log("cmd", cmd)
         console.log("prevresult.code", prevresult.code)       
         if (prevresult.code == 0) {
@@ -62,7 +73,7 @@ export default class App {
     } catch (e) {
       this.sendEmail(`${req.params.project} deploy failed`, JSON.stringify(e))
     }
-  }
+  }*/
 
   store(projectName: string) {
     const collection = this.db.collection('deployments');
