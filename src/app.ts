@@ -15,65 +15,54 @@ export default class App {
     this.initServer()   
   }
 
+
   async deploy(req, res) {
+    
+    let commands = [
+      {
+        cmd: shell.cd,
+        args: `${process.env.PROJECSTPATH}${req.params.project}`
+      },
+      {
+        cmd: shell.exec,
+        args: `git pull`
+      },
+      {
+        cmd: shell.exec,
+        args: `npm run tsc`
+      },
+      {
+        cmd: shell.exec,
+        args: `pm2 restart 0`
+      },
+    ]
+
     try {
-      let res = await shell.exec(`cd ${process.env.PROJECSTPATH}${req.params.project} && git pull && npm run tsc && pm2 restart 0`)
-      console.log('res', res)
-      this.sendEmail(`${req.params.project} deploy success`, `${req.params.project} deploy success`)
-    }catch(e) {
-      this.sendEmail(`${req.params.project} deploy failed`, JSON.stringify(e))
-    }
-  }
-
-  /*async deploy(req, res) {
-    try {
-
-      let commands = [
-        {
-          cmd: 'cd',
-          args: `${process.env.PROJECSTPATH}${req.params.project}`
-        },
-        {
-          cmd: 'git',
-          args: `pull`
-        },
-        {
-          cmd: 'npm',
-          args: `run tsc`
-        },
-        {
-          cmd: 'pm2',
-          args: `restart 0`
-        }
-      ]
-
       let result = await commands.reduce( async (previousPromise, next) => {
         let prevresult:any = await previousPromise;
-        let cmd = next.cmd + ' ' + next.args
-        await shell.exec('pwd')
-        //let commandExists = await shell.which(next.cmd)
-	      console.log("cmd", cmd)
-        console.log("prevresult.code", prevresult.code)       
         if (prevresult.code == 0) {
-          return shell.exec(cmd)
+          return next.cmd.call(null,next.args)
         }else{
           return Promise.resolve({code: 1})
         }
       }, Promise.resolve({code: 0}))
 
-      console.log("result", result)
-
-      if (result.code == 1) {
-        this.sendEmail(`${req.params.project} deploy failed`, "")
-        //shell.exit(0)
-      }else{
+      if (result.code == 0) {
         this.sendEmail(`${req.params.project} deploy success`, `${req.params.project} deploy success`)
-      }      
+        res.status(200).json({msg: 'ok'});
+      } else {
+        res.status(400).json({msg: 'ko', error: 'Something went wrong'});
+        this.sendEmail(`${req.params.project} deploy failed`, "")
+      }
 
-    } catch (e) {
+    } catch(e) {
       this.sendEmail(`${req.params.project} deploy failed`, JSON.stringify(e))
+      res.status(400).json({msg: 'ko', error: e});
     }
-  }*/
+    
+  }
+
+  
 
   store(projectName: string) {
     const collection = this.db.collection('deployments');
