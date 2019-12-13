@@ -48,7 +48,13 @@ export default class App {
       }, Promise.resolve({code: 0}))
 
       if (result.code == 0) {
-        this.sendEmail(`${req.params.project} deploy success`, `${req.params.project} deploy success`)
+
+        let message = `
+          Last-commit-id: ${req.body.head_commit.id}\n
+          Pusher: ${req.body.pusher.name}
+        `
+
+        this.sendEmail(`${req.params.project} deploy success`, `${req.params.project} deploy success\n\n${message}`)
         res.status(200).json({msg: 'ok'});
       } else {
         res.status(400).json({msg: 'ko', error: 'Something went wrong'});
@@ -61,8 +67,6 @@ export default class App {
     }
     
   }
-
-  
 
   store(projectName: string) {
     const collection = this.db.collection('deployments');
@@ -90,6 +94,7 @@ export default class App {
 
   initServer() {
     this.expressApp = express();
+    this.expressApp.use(express.json());
     this.expressApp.listen(3010, () => {
       console.log('Server running on port 3010!');
     });
