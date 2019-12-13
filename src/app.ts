@@ -33,7 +33,7 @@ export default class App {
       },
       {
         cmd: shell.exec,
-        args: `pm2 restart 0`
+        args: `pm2 restart ${req.params.project}`
       },
     ]
 
