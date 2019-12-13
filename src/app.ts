@@ -17,6 +17,11 @@ export default class App {
 
 
   async deploy(req, res) {
+
+    if (req.body.ref != "refs/heads/develop") {
+      res.status(200).json({msg: 'ok'});
+      return;
+    }
     
     let commands = [
       {
@@ -49,7 +54,7 @@ export default class App {
 
       if (result.code == 0) {
 
-        let message = `
+        const message = `
           Last-commit-id: ${req.body.head_commit.id}\n
           Pusher: ${req.body.pusher.name}
         `
